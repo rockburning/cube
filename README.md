@@ -18,3 +18,36 @@ cube rpc -s=YourService -m=CreaetUser,DeleteUser
 cube help
 ```
 
+# 生成示例
+cube rpc -s=YourService -m=CreaetUser,DeleteUsers -req=Req
+
+```protobuf
+service YourService {
+  rpc CreaetUser (CreaetUserReq) returns (CreaetUserReply){
+    option (google.api.http) = {
+    };
+  };
+  rpc DeleteUsers (DeleteUsersReq) returns (DeleteUsersReply){
+    option (google.api.http) = {
+    };
+  };
+
+}
+
+message CreaetUserReq{
+
+}
+
+message CreaetUserReply{
+
+}
+
+message DeleteUsersReq{
+
+}
+
+message DeleteUsersReply{
+
+}
+
+```
