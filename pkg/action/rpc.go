@@ -1,6 +1,7 @@
 package action
 
 import (
+	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"os"
@@ -25,6 +26,10 @@ func (a *rpcAction) GenerateRpcFile(c *cli.Context) error {
 	methods := c.String("methods")
 	if methods == "" {
 		methods = c.String("m")
+	}
+	if methods == "" {
+		fmt.Fprintf(os.Stderr, "请指定rpc子命令 -m参数\n")
+		return errors.New("可参考cube help的对应子命令 cube rpc help")
 	}
 
 	svc := c.String("service")
@@ -51,6 +56,9 @@ func (a *rpcAction) GenerateRpcFile(c *cli.Context) error {
 	messageRes := ""
 	methodList := strings.Split(methods, ",")
 	for _, val := range methodList {
+		if val == "" {
+			continue
+		}
 		req := val + requestSuffix
 		reply := val + replySuffix
 		resultRpc += fmt.Sprintf(rpcFmt, val, req, reply)
