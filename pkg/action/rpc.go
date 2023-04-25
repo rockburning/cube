@@ -17,27 +17,42 @@ var serviceFmt = "service %s {\n%s\n}\n"
 var rpcFmt = "  rpc %s (%s) returns (%s){\n    option (google.api.http) = {\n    };\n  };\n"
 var msgFmt = "message %s{\n\n}\n\n"
 
-const Request = "Request"
-const Reply = "Reply"
+const DefaultRequest = "Request"
+const DefaultReply = "Reply"
+const DefaultSvc = "DefaultService"
 
 func (a *rpcAction) GenerateRpcFile(c *cli.Context) error {
-	iface := c.String("interface")
-	svc := c.String("service")
-	if iface == "" {
-		iface = c.String("i")
+	methods := c.String("methods")
+	if methods == "" {
+		methods = c.String("m")
 	}
+
+	svc := c.String("service")
 	if svc == "" {
 		svc = c.String("s")
 	}
 	if svc == "" {
-		svc = "DefaultService"
+		svc = DefaultSvc
+	}
+	replySuffix := DefaultReply
+	requestSuffix := DefaultRequest
+
+	if req := c.String("request"); req != "" {
+		requestSuffix = req
+	} else if req = c.String("req"); req != "" {
+		requestSuffix = req
+	}
+	if resp := c.String("reply"); resp != "" {
+		replySuffix = resp
+	} else if resp = c.String("rep"); resp != "" {
+		requestSuffix = resp
 	}
 	resultRpc := ""
 	messageRes := ""
-	ifaceList := strings.Split(iface, ",")
-	for _, val := range ifaceList {
-		req := val + Request
-		reply := val + Reply
+	methodList := strings.Split(methods, ",")
+	for _, val := range methodList {
+		req := val + requestSuffix
+		reply := val + replySuffix
 		resultRpc += fmt.Sprintf(rpcFmt, val, req, reply)
 		messageRes += fmt.Sprintf(msgFmt, req)
 		messageRes += fmt.Sprintf(msgFmt, reply)

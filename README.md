@@ -9,7 +9,7 @@ go install -v github.com/rockburning/cube/cmd/cube@latest
 
 ```
 Usage:
-cube rpc -s=YourService -i=CreaetUser,DeleteUser
+cube rpc -s=YourService -m=CreaetUser,DeleteUser
 ```
 
 # For help
